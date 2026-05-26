@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Generate beautiful, customizable QR codes instantly — free, no sign-up required.">
+    <title>QR Studio — QR Code Generator</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⬛</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@700;800&display=swap">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="noise"></div>
+
+<main class="shell">
+
+    <header class="header">
+        <div class="logo">QR<span>Studio</span></div>
+        <p class="tagline">Generate · Customize · Download</p>
+    </header>
+
+    <div class="layout">
+
+        <!-- ── Left: Controls ── -->
+        <section class="card controls-card" aria-label="QR Code settings">
+
+            <div class="field">
+                <label for="qrText">Text or URL</label>
+                <div class="input-wrap">
+                    <input
+                        type="text"
+                        id="qrText"
+                        placeholder="https://example.com"
+                        maxlength="2000"
+                        autocomplete="off"
+                        spellcheck="false"
+                    >
+                    <span class="char-count" id="charCount">0 / 2000</span>
+                </div>
+            </div>
+
+            <div class="row-fields">
+                <div class="field">
+                    <label for="fgColor">Foreground</label>
+                    <div class="color-wrap">
+                        <input type="color" id="fgColor" value="#000000">
+                        <span class="color-hex" id="fgHex">#000000</span>
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="bgColor">Background</label>
+                    <div class="color-wrap">
+                        <input type="color" id="bgColor" value="#ffffff">
+                        <span class="color-hex" id="bgHex">#ffffff</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="sizeRange">Size <span class="range-val" id="sizeVal">10</span></label>
+                <input type="range" id="sizeRange" min="5" max="20" value="10" class="slider">
+            </div>
+
+            <div class="field">
+                <label class="toggle-label">
+                    <input type="checkbox" id="roundedToggle" class="toggle-input">
+                    <span class="toggle-track"><span class="toggle-thumb"></span></span>
+                    Rounded modules
+                </label>
+            </div>
+
+            <div class="btn-row">
+                <button class="btn btn-primary" id="generateBtn" onclick="generateQR()">
+                    <span class="btn-text">Generate QR</span>
+                    <span class="spinner" id="spinner" hidden></span>
+                </button>
+                <button class="btn btn-secondary" id="downloadBtn" onclick="downloadQR()" disabled>
+                    ↓ Download
+                </button>
+            </div>
+
+            <p class="error-msg" id="errorMsg" hidden></p>
+
+        </section>
+
+        <!-- ── Right: Preview ── -->
+        <section class="card preview-card" aria-label="QR code preview">
+            <div class="qr-stage" id="qrStage">
+                <div class="placeholder" id="placeholder">
+                    <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="4" y="4" width="24" height="24" rx="3" stroke="currentColor" stroke-width="3"/>
+                        <rect x="10" y="10" width="12" height="12" rx="1" fill="currentColor"/>
+                        <rect x="36" y="4" width="24" height="24" rx="3" stroke="currentColor" stroke-width="3"/>
+                        <rect x="42" y="10" width="12" height="12" rx="1" fill="currentColor"/>
+                        <rect x="4" y="36" width="24" height="24" rx="3" stroke="currentColor" stroke-width="3"/>
+                        <rect x="10" y="42" width="12" height="12" rx="1" fill="currentColor"/>
+                        <rect x="36" y="36" width="8" height="8" rx="1" fill="currentColor"/>
+                        <rect x="50" y="36" width="8" height="8" rx="1" fill="currentColor"/>
+                        <rect x="36" y="50" width="8" height="8" rx="1" fill="currentColor"/>
+                        <rect x="50" y="50" width="8" height="8" rx="1" fill="currentColor"/>
+                    </svg>
+                    <p>Your QR code will appear here</p>
+                </div>
+                <img id="qrImage" alt="Generated QR Code" hidden>
+            </div>
+
+            <button class="btn btn-ghost" id="copyBtn" onclick="copyQR()" hidden>
+                Copy Image
+            </button>
+
+        </section>
+
+    </div>
+
+    <!-- ── History ── -->
+    <section class="history-section" id="historySection" hidden>
+        <h2 class="history-title">Recent</h2>
+        <div class="history-list" id="historyList"></div>
+    </section>
+
+</main>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
